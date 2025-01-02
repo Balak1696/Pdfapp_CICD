@@ -13,22 +13,20 @@ jobs:
       - run: |
           touch .env
           echo "${{ secrets.DOCKER_DEMO_FILE }}" > .env
-     env:
-        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
       - name: Build Docker image
-        run: docker build -t Balak1696/Pdfapp_CICD .
+        run: docker build -t balak1696/pdfapp_cicd .
       - name: Publish image to Docker Hub
-        run: docker push Balak1696/Pdfapp_CICD:latest
+        run: docker push balak1696/pdfapp_cicd:latest
         
   deploy:
     needs: build
     runs-on: [aws-ec2]
     steps:
       - name: Pull image from Docker Hub
-        run: docker pull Balak1696/Pdfapp_CICD:latest
+        run: docker pull balak1696/pdfapp_cicd:latest
       - name: Delete old container
-        run: docker rm -f Pdfapp_CICD-container || true
+        run: docker rm -f pdfapp_cicd-container || true
       - name: Run Docker container
-        run: docker run -d -p 3000:3000 --name Pdfapp_CICD-container Balak1696/Pdfapp_CICD
+        run: docker run -d -p 3000:3000 --name pdfapp_cicd-container balak1696/pdfapp_cicd
