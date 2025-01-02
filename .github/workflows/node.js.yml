@@ -20,7 +20,7 @@ jobs:
       - name: Login to Docker Hub
       run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          
+
       - name: Build Docker image
         run: docker build -t balak1696/pdfapp_cicd:latest .
 
@@ -29,7 +29,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest  # AWS EC2 requires custom runners; adjust this if you're using a self-hosted runner
+    runs-on: ubuntu-latest  
     steps:
       - name: Login to Docker Hub
         run: |
