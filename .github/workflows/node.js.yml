@@ -21,7 +21,7 @@ jobs:
         run: |
           echo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
       - name: Build Docker image
-        run: docker build -t balak1696/pdfapp_cicd:latest .
+        run: docker build -t balak1696/pdfapp_cicd .
 
       - name: Publish image to Docker Hub
         run: docker push balak1696/pdfapp_cicd:latest
@@ -30,17 +30,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest  # AWS EC2 requires custom runners; adjust this if you're using a self-hosted runner
     steps:
-      - name: Login to Docker Hub
-        run: |
-          echo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
-
-      - name: Pull image from Docker Hub
+      - name: Pull image from docker hub
         run: docker pull balak1696/pdfapp_cicd:latest
-
-      - name: Stop and remove the old container (if exists)
-        run: |
-          docker ps -q --filter "name=pdfapp_cicd-container" | grep -q . && docker rm -f pdfapp_cicd-container || echo "No container to remove"
-
-      - name: Run Docker container
-        run: |
-          docker run -d -p 3000:3000 --name pdfapp_cicd-container balak1696/pdfapp_cicd:latest
+      - name: Delete old container
+        run: docker rm -f pdfapp_cicd-container
+      - name: Run docker container
+        run: docker run -d -p 3000:3000 --name nodejs-app-container balak1696/pdfapp_cicd
