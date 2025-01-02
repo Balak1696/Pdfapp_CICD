@@ -29,7 +29,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest  
+    runs-on: ubuntu-latest  # AWS EC2 requires custom runners; adjust this if you're using a self-hosted runner
     steps:
       - name: Login to Docker Hub
         run: |
