@@ -10,6 +10,11 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
+        - run : |
+         touch .env
+         DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+         echo "${{secrets.DOCKER_DEMO_FILE}}" > .env
       - name: Login to docker hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
       - name: Build docker image
